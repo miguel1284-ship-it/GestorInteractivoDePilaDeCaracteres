@@ -1,0 +1,139 @@
+package nuevo;  // Asegúrate de que tu archivo esté en una carpeta llamada "nuevo"
+
+import java.util.InputMismatchException;
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Pila pila = null;
+
+        // Solicitar el tamaño de la pila
+        while (pila == null) {
+            try {
+                System.out.println("Ingrese el tamaño de la pila:");
+                int tam = sc.nextInt();
+                pila = new Pila(tam);
+            } catch (InputMismatchException e) {
+                System.out.println("Error. Ingrese un número entero.");
+                sc.next(); // Limpiar el buffer
+            }
+        }
+
+        int opcion = 0;
+        // Menú principal
+        do {
+            try {
+                System.out.println("\n1. Ingresar dato");
+                System.out.println("2. Eliminar dato");
+                System.out.println("3. Mostrar pila");
+                System.out.println("4. Rellenar pila con caracteres aleatorios");
+                System.out.println("5. Generar cadena a partir de la pila");
+                System.out.println("6. Salir");
+                System.out.print("Ingrese una opción: ");
+                opcion = sc.nextInt();
+
+                // Ejecutar opción seleccionada
+                switch (opcion) {
+                    case 1:
+                        IngresoDato.ingresarDato(pila, sc);
+                        break;
+                    case 2:
+                        EliminarDato.eliminarDato(pila);
+                        break;
+                    case 3:
+                        MostrarPila.mostrarPila(pila);
+                        break;
+                    case 4:
+                        RellenarPila.rellenarPila(pila);
+                        break;
+                    case 5:
+                        GenerarCadena.generarCadena(pila);
+                        break;
+                    case 6:
+                        Salir.salir();
+                        break;
+                    default:
+                        System.out.println("Opción no válida.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Error. Ingrese un número entero.");
+                sc.next(); // Limpiar el buffer
+            }
+        } while (opcion != 6);
+
+        sc.close();
+    }
+}
+
+// Clase que representa la Pila
+class Pila {
+    private char[] pila;
+    private int tope;
+
+    public Pila(int tamaño) {
+        pila = new char[tamaño];
+        tope = 0;
+    }
+
+    public int getTope() {
+        return tope;
+    }
+
+    public void setTope(int tope) {
+        this.tope = tope;
+    }
+
+    public char[] getPila() {
+        return pila;
+    }
+}
+
+// Clase para ingresar datos a la pila
+class IngresoDato {
+    public static void ingresarDato(Pila pila, Scanner sc) {
+        if (pila.getTope() < pila.getPila().length) {
+            System.out.print("Ingrese un carácter (números, letras o especiales): ");
+            char dato = sc.next().charAt(0);
+
+            // Validar si el carácter es válido (letra, dígito o especial)
+            if (Character.isLetterOrDigit(dato) || !Character.isWhitespace(dato)) {
+                pila.getPila()[pila.getTope()] = dato;
+                pila.setTope(pila.getTope() + 1);
+                System.out.println("Carácter ingresado con éxito.");
+            } else {
+                System.out.println("Error. Ingrese un carácter válido.");
+            }
+        } else {
+            System.out.println("La pila está llena.");
+        }
+    }
+}
+
+// Clase para eliminar el último dato de la pila
+class EliminarDato {
+    public static void eliminarDato(Pila pila) {
+        if (pila.getTope() > 0) {
+            pila.setTope(pila.getTope() - 1);
+            System.out.println("Último dato eliminado.");
+        } else {
+            System.out.println("La pila está vacía.");
+        }
+    }
+}
+
+// Clase para mostrar los datos en la pila
+class MostrarPila {
+    public static void mostrarPila(Pila pila) {
+        if (pila.getTope() > 0) {
+            System.out.println("Datos actuales en la pila:");
+            for (int i = pila.getTope() - 1; i >= 0; i--) {
+                System.out.println(pila.getPila()[i]);
+            }
+        } else {
+            System.out.println("La pila está vacía.");
+        }
+    }
+}
